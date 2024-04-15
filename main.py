@@ -13,7 +13,7 @@ def run_yolo_augmentor():
 
     for img_num, img_file in enumerate(imgs):
         print(f"{img_num+1}-image is processing...\n")
-        for i in range(30):
+        for i in range(44):
             image, gt_bboxes, aug_file_name = get_inp_data(img_file)
             aug_img, aug_label = get_augmented_results(image, gt_bboxes,i)
             if len(aug_img) and len(aug_label):

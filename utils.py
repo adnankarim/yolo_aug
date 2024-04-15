@@ -209,27 +209,7 @@ def has_negative_element(lst):
 
 
 def get_augmented_results(image, bboxes,number):
-    """
-    Apply data augmentation to an input image and bounding boxes.
-
-    Parameters:
-    - image (numpy.ndarray): Input image.
-    - bboxes (list): List of bounding boxes in YOLO format [x_center, y_center, width, height, class_name].
-
-    Returns:
-    - tuple: A tuple containing the augmented image and the transformed bounding boxes.
-    """
-    # Define the augmentations
-    # transform = A.Compose([
-    #     A.RandomCrop(width=100, height=200,p=0.5),
-    #     A.HorizontalFlip(p=0.5),
-    #     A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0),
-    #     A.CLAHE(clip_limit=(0, 1), tile_grid_size=(8, 8), always_apply=True),
-    #     A.Resize(640, 512)
-    # ], bbox_params=A.BboxParams(format='yolo'))
-    # Transform 6
-        
-    # Transform 1
+   
     transform1 = A.Compose([
         A.HorizontalFlip(p=0.5),
         A.VerticalFlip(p=0.5),
@@ -484,8 +464,87 @@ def get_augmented_results(image, bboxes,number):
                                 transform16, transform17, transform18, transform19, transform20,transform21,transform22,transform23,transform24,
                                 transform25,transform26,transform27,transform28,transform29,transform30])
     # import random
+    transform_pipelines.extend([
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomFog(fog_coef_lower=0.1, fog_coef_upper=0.5, alpha_coef=0.1, p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomSunFlare(flare_roi=(0, 0, 1, 0.5), p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomRain(slant_lower=-10, slant_upper=10, drop_length=10, drop_width=1, drop_color=(200, 200, 200), blur_value=3, brightness_coefficient=0.7, p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomSnow(snow_point_lower=0.1, snow_point_upper=0.3, brightness_coeff=2.5, p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    
+])
+    transforms2 = [
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomBrightnessContrast(brightness_limit=(-0.3, 0.3), contrast_limit=(-0.3, 0.3), p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomGamma(gamma_limit=(80, 120), p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomRotate90(p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.HorizontalFlip(p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.VerticalFlip(p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomScale(scale_limit=(-0.2, 0.2), p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.RandomCrop(height=450, width=450, p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.Solarize ( p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.ToSepia( p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo')),
+    A.Compose([
+        A.Resize(640, 512),
+        A.Superpixels( p=0.5),
+        A.Resize(640, 512)
+    ], bbox_params=A.BboxParams(format='yolo'))
+]
+    transform_pipelines.extend(transforms2)
+    # print(len(transform_pipelines))
+    
     # random_number=random.randint(0,len(transform_pipelines))
     # Apply the augmentations
+    print(number)
     transformed = transform_pipelines[number](image=image, bboxes=bboxes)
     transformed_image, transformed_bboxes = transformed['image'], transformed['bboxes']
 
